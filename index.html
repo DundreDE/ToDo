@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .fade-out {
+      transition: opacity 0.5s ease-out;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">To-Do App</h1>
+    <form id="todo-form" class="flex mb-6">
+      <input id="todo-input" type="text" class="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter a new task">
+      <button type="submit" class="p-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Add</button>
+    </form>
+    <ul id="todo-list" class="space-y-2"></ul>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

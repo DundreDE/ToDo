@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleInput = document.getElementById('title-input');
   const descriptionInput = document.getElementById('description-input');
   const imageInput = document.getElementById('image-input');
-  const cancelButton = document.getElementById('cancel-button');
+  const currentImage = document.getElementById('current-image');
+  const imagePlaceholder = document.getElementById('image-placeholder');
 
   let currentTaskElement;
 
@@ -34,14 +35,22 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('todos', JSON.stringify(tasks));
   };
 
+  // Validate image source
+  const isImageValid = (imageSrc) => {
+    return imageSrc.startsWith('data:image/') || imageSrc.startsWith('http') || imageSrc.startsWith('blob:');
+  };
+
   // Add task to the DOM
   const addTaskToDOM = (task) => {
     const li = document.createElement('li');
     li.className = `flex flex-col p-3 border border-gray-200 rounded-lg ${task.completed ? 'fade-out bg-gray-100' : 'bg-white'}`;
-    
+
+    // Create the image element conditionally
+    const imgHTML = task.image && isImageValid(task.image) ? `<img src="${task.image}" class="thumbnail task-image" alt="Task Image">` : '';
+
     li.innerHTML = `
       <div class="flex items-center">
-        ${task.image ? `<img src="${task.image}" class="thumbnail task-image" alt="Task Image">` : ''}
+        ${imgHTML}
         <div class="flex-1">
           <span class="task-text ${task.completed ? 'text-gray-500' : 'text-gray-800'}">${task.text}</span>
           ${task.description ? `<hr><p class="task-description">${task.description}</p>` : ''}
@@ -88,7 +97,24 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTaskElement = li;
         titleInput.value = li.querySelector('.task-text').textContent;
         descriptionInput.value = li.querySelector('.task-description')?.textContent || '';
-        imageInput.value = '';
+
+        // Handle current image
+        const imageElem = li.querySelector('.task-image');
+        if (imageElem) {
+          currentImage.src = imageElem.src;
+          if (isImageValid(currentImage.src)) {
+            currentImage.classList.remove('hidden');
+            imagePlaceholder.classList.add('hidden');
+          } else {
+            currentImage.classList.add('hidden');
+            imagePlaceholder.classList.remove('hidden');
+          }
+        } else {
+          currentImage.src = '';
+          currentImage.classList.add('hidden');
+          imagePlaceholder.classList.remove('hidden');
+        }
+
         popup.classList.add('active');
         popupOverlay.classList.add('active');
       }
@@ -119,11 +145,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
     let image = '';
+
+    if (title === '') {
+      alert('The title cannot be empty.');
+      return;
+    }
+
     if (imageInput.files.length > 0) {
       const reader = new FileReader();
       reader.onload = (e) => {
         image = e.target.result;
-        updateTaskDetails(currentTaskElement, title, description, image);
+        if (isImageValid(image)) {
+          updateTaskDetails(currentTaskElement, title, description, image);
+        } else {
+          alert('This image cannot be processed.');
+          imageInput.value = ''; // Clear the file input
+        }
+      };
+      reader.onerror = () => {
+        alert('An error occurred while reading the image.');
+        imageInput.value = ''; // Clear the file input
       };
       reader.readAsDataURL(imageInput.files[0]);
     } else {
@@ -133,12 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     popupOverlay.classList.remove('active');
   });
 
-  // Handle cancel button click
-  cancelButton.addEventListener('click', () => {
-    popup.classList.remove('active');
-    popupOverlay.classList.remove('active');
-  });
-
+  // Update task details
   const updateTaskDetails = (taskElement, title, description, image) => {
     if (title) {
       taskElement.querySelector('.task-text').textContent = title;
@@ -164,14 +200,35 @@ document.addEventListener('DOMContentLoaded', () => {
         imgElem.className = 'thumbnail task-image';
         taskElement.insertBefore(imgElem, taskElement.firstChild);
       }
+    } else {
+      const imgElem = taskElement.querySelector('.task-image');
+      if (imgElem) {
+        imgElem.remove();
+      }
     }
     saveTasks();
   };
+
+  // Cancel button functionality
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    popup.classList.remove('active');
+    popupOverlay.classList.remove('active');
+    // Reset image input and current image
+    imageInput.value = '';
+    currentImage.src = '';
+    currentImage.classList.add('hidden');
+    imagePlaceholder.classList.remove('hidden');
+  });
 
   // Hide popup when clicking outside
   popupOverlay.addEventListener('click', () => {
     popup.classList.remove('active');
     popupOverlay.classList.remove('active');
+    // Reset image input and current image
+    imageInput.value = '';
+    currentImage.src = '';
+    currentImage.classList.add('hidden');
+    imagePlaceholder.classList.remove('hidden');
   });
 
   // Load tasks on page load

@@ -7,23 +7,27 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
 </head>
-<body class="flex justify-center items-center min-h-screen">
+<body class="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500">
   <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">To-Do App</h1>
     <form id="todo-form" class="flex mb-6">
-      <input id="todo-input" type="text" class="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter a new task">
+      <input id="todo-input" type="text" class="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter a new task" required>
       <button type="submit" class="p-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Add</button>
     </form>
     <ul id="todo-list" class="space-y-2"></ul>
   </div>
 
   <div id="popup" class="popup">
-    <form id="popup-form">
-      <h2 class="text-2xl font-bold mb-4">Edit Task</h2>
-      <input id="title-input" type="text" class="w-full p-3 border border-gray-300 rounded mb-4" placeholder="Edit task title">
+    <form id="popup-form" class="space-y-4">
+      <h2 class="text-2xl font-bold mb-4">Edit Task Details</h2>
+      <input id="title-input" type="text" class="w-full p-3 border border-gray-300 rounded mb-4" placeholder="Task Title" required>
       <textarea id="description-input" rows="3" class="w-full p-3 border border-gray-300 rounded mb-4" placeholder="Add a description"></textarea>
-      <input type="file" id="image-input" class="mb-4">
-      <div class="flex gap-2">
+      <div id="image-container" class="mb-4">
+        <img id="current-image" class="w-32 h-32 object-cover rounded mb-2 hidden" src="" alt="Current Image">
+        <div id="image-placeholder" class="text-center text-gray-400">No image</div>
+        <input type="file" id="image-input" class="w-full p-2 border border-gray-300 rounded">
+      </div>
+      <div class="flex justify-between">
         <button type="submit" class="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Save</button>
         <button type="button" id="cancel-button" class="p-3 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">Cancel</button>
       </div>

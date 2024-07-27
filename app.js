@@ -38,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
         li.classList.toggle('fade-out');
         li.classList.toggle('bg-gray-100');
         li.querySelector('.task-text').classList.toggle('text-gray-500');
+
+        // Move completed tasks to the end
+        if (li.classList.contains('fade-out')) {
+          todoList.appendChild(li);
+        } else {
+          todoList.prepend(li);
+        }
+
         saveTasks();
       }
     });
@@ -49,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
       saveTasks();
     });
 
-    todoList.appendChild(li);
+    if (task.completed) {
+      todoList.appendChild(li);
+    } else {
+      todoList.prepend(li);
+    }
   };
 
   // Add new task

@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const popup = document.getElementById('popup');
   const popupOverlay = document.getElementById('popup-overlay');
   const popupForm = document.getElementById('popup-form');
+  const titleInput = document.getElementById('title-input');
   const descriptionInput = document.getElementById('description-input');
   const imageInput = document.getElementById('image-input');
+  const cancelButton = document.getElementById('cancel-button');
 
   let currentTaskElement;
 
@@ -84,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     li.addEventListener('click', (e) => {
       if (e.target.tagName !== 'BUTTON') {
         currentTaskElement = li;
+        titleInput.value = li.querySelector('.task-text').textContent;
         descriptionInput.value = li.querySelector('.task-description')?.textContent || '';
         imageInput.value = '';
         popup.classList.add('active');
@@ -113,23 +116,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle popup form submission
   popupForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
     let image = '';
     if (imageInput.files.length > 0) {
       const reader = new FileReader();
       reader.onload = (e) => {
         image = e.target.result;
-        updateTaskDetails(currentTaskElement, description, image);
+        updateTaskDetails(currentTaskElement, title, description, image);
       };
       reader.readAsDataURL(imageInput.files[0]);
     } else {
-      updateTaskDetails(currentTaskElement, description, image);
+      updateTaskDetails(currentTaskElement, title, description, image);
     }
     popup.classList.remove('active');
     popupOverlay.classList.remove('active');
   });
 
-  const updateTaskDetails = (taskElement, description, image) => {
+  // Handle cancel button click
+  cancelButton.addEventListener('click', () => {
+    popup.classList.remove('active');
+    popupOverlay.classList.remove('active');
+  });
+
+  const updateTaskDetails = (taskElement, title, description, image) => {
+    if (title) {
+      taskElement.querySelector('.task-text').textContent = title;
+    }
     if (description) {
       const descElem = taskElement.querySelector('.task-description');
       if (descElem) {

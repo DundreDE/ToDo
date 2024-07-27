@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentImage = document.getElementById('current-image');
   const imagePlaceholder = document.getElementById('image-placeholder');
 
-  let currentTaskElement;
+  let currentTaskElement = null;
 
   // Load tasks from LocalStorage
   const loadTasks = () => {
@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     popup.classList.remove('active');
     popupOverlay.classList.remove('active');
+    resetPopup();
   });
 
   // Update task details
@@ -209,26 +210,30 @@ document.addEventListener('DOMContentLoaded', () => {
     saveTasks();
   };
 
-  // Cancel button functionality
-  document.getElementById('cancel-button').addEventListener('click', () => {
-    popup.classList.remove('active');
-    popupOverlay.classList.remove('active');
-    // Reset image input and current image
+  // Reset popup fields
+  const resetPopup = () => {
+    titleInput.value = '';
+    descriptionInput.value = '';
     imageInput.value = '';
     currentImage.src = '';
     currentImage.classList.add('hidden');
     imagePlaceholder.classList.remove('hidden');
+  };
+
+  // Cancel button functionality
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    popup.classList.remove('active');
+    popupOverlay.classList.remove('active');
+    resetPopup();
+    currentTaskElement = null;
   });
 
   // Hide popup when clicking outside
   popupOverlay.addEventListener('click', () => {
     popup.classList.remove('active');
     popupOverlay.classList.remove('active');
-    // Reset image input and current image
-    imageInput.value = '';
-    currentImage.src = '';
-    currentImage.classList.add('hidden');
-    imagePlaceholder.classList.remove('hidden');
+    resetPopup();
+    currentTaskElement = null;
   });
 
   // Load tasks on page load

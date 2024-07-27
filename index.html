@@ -5,18 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To-Do App</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .fade-out {
-      transition: opacity 0.5s ease-out;
-      opacity: 0.5;
-    }
-    .task-text {
-      word-break: break-word; /* Allows long text to wrap to the next line */
-    }
-  </style>
+  <link href="styles.css" rel="stylesheet">
 </head>
 <body class="flex justify-center items-center min-h-screen">
   <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
@@ -27,6 +16,17 @@
     </form>
     <ul id="todo-list" class="space-y-2"></ul>
   </div>
+
+  <div id="popup" class="popup">
+    <form id="popup-form">
+      <h2 class="text-2xl font-bold mb-4">Add Description and Image</h2>
+      <textarea id="description-input" rows="3" class="w-full p-3 border border-gray-300 rounded mb-4" placeholder="Add a description"></textarea>
+      <input type="file" id="image-input" class="mb-4">
+      <button type="submit" class="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Save</button>
+    </form>
+  </div>
+  <div id="popup-overlay" class="popup-overlay"></div>
+
   <script src="app.js"></script>
 </body>
 </html>
